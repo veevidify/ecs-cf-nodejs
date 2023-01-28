@@ -1,0 +1,11 @@
+{
+  "name": "ecs-cf-nodejs",
+  "version": "1.0.0",
+  "description": "Node app with infras definition",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "V N (vee.vidify@gmail.com)",
+  "license": "ISC"
+}
