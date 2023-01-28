@@ -6,7 +6,7 @@ import { log } from "./logging";
 const app = createExpressApp();
 dotenv.config();
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 const env = process.env.APP_ENV || "local";
 
 app.get("/", (req, res) => {
