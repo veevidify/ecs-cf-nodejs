@@ -14,7 +14,7 @@ services:
       - "8080:$PORT"
     networks:
       - node-bridge
-    command: npx ts-node src/server.ts
+    command: npm run start-dev
 
 networks:
   node-bridge:

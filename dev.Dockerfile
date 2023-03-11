@@ -6,5 +6,5 @@ WORKDIR /app
 COPY . /app/
 RUN npm install
 
-CMD ["npx", "ts-node", "src/server.ts"]
+CMD ["npm", "run", "start-dev"]
 EXPOSE 80
