@@ -2,12 +2,12 @@
   "name": "ecs-cf-nodejs",
   "version": "1.0.0",
   "description": "Node app with infras definition",
-  "main": "src/index.ts",
+  "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-dev": "ts-node src/index.ts",
-    "build": "tsc -p tsconfig.json",
-    "start": "npm run build && node dist/index.js"
+    "start-dev": "ts-node src/server.ts",
+    "build": "npm ci && tsc -p tsconfig.json",
+    "start": "node dist/server.js"
   },
   "author": "V N (vee.vidify@gmail.com)",
   "license": "ISC",
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.16",
+    "@types/node": "^18.11.18",
     "ts-node": "^10.9.1"
   }
 }

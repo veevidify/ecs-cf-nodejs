@@ -15,10 +15,11 @@ export const winstonLogger: Logger = createLogger({
 
 export const logWith =
   (logger: Logger | Console) =>
-  (level: LogLevel, contents: any) => {
+  (level: LogLevel, msg: string, extra: any = {}) => {
     logger.log({
       level,
-      message: contents,
+      message: msg,
+      extra,
     });
   };
 
