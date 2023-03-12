@@ -1,0 +1,30 @@
+[
+    {
+        "ParameterName": "KeyName",
+        "ParameterValue": "MyKeyPairName"
+    },
+    {
+        "ParameterName": "VpcId",
+        "ParameterValue": "vpc-1234abcde12345abc"
+    },
+    {
+        "ParameterName": "SubnetId",
+        "ParameterValue": ["subnet-1234abcde12345abc", "subnet-1234abcde12345abc"]
+    },
+    {
+        "ParameterName": "DesiredCapacity",
+        "ParameterValue": "1"
+    },
+    {
+        "ParameterName": "MaxSize",
+        "ParameterValue": "2"
+    },
+    {
+        "ParameterName": "InstanceType",
+        "ParameterValue": "t2.micro"
+    },
+    {
+        "ParameterName": "InstanceAmi",
+        "ParameterValue": "ami-0cdf84c392db3c246"
+    }
+]

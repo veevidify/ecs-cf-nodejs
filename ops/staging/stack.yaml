@@ -1,0 +1,111 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  KeyName:
+    Type: "AWS::EC2::KeyPair::KeyName"
+    Description: "Key pair to access EC2 instance of ECS cluster"
+  VpcId:
+    Type: "AWS::EC2::VPC::Id"
+    Description: "VPC with internet access"
+  SubnetId:
+    Type: "List<AWS::EC2::Subnet::Id>"
+    Description: "Min 2 subnets within your VPC"
+  DesiredCapacity:
+    Type: Number
+    Default: "1"
+    Description: "Desired # of EC2 instances for ECS cluster"
+  MaxSize:
+    Type: Number
+    Default: "1"
+    Description: "Allowed max # of EC2 instances for ECS cluster"
+  InstanceType:
+    Description: "Instance type for EC2 instance"
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t2.large
+      - m3.medium
+      - m3.large
+      - m3.xlarge
+      - m3.2xlarge
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - c4.large
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - c3.large
+      - c3.xlarge
+      - c3.2xlarge
+      - c3.4xlarge
+      - c3.8xlarge
+      - r3.large
+      - r3.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+      - i2.xlarge
+      - i2.2xlarge
+      - i2.4xlarge
+      - i2.8xlarge
+    ConstraintDescription: Choose a valid instance type.
+
+Resources:
+  EcsCluster:
+    Type: "AWS::ECS::Cluster"
+
+  EcsSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Default ECS Security Group"
+      VpcId: !Ref VpcId
+  EcsSecurityGroupHttpInbound:
+    Type: "AWS::EC2::SecurityGroupIngress"
+    Properties:
+      GroupId: !Ref EcsSecurityGroup
+      IpProtocol: tcp
+      FromPort: 80
+      ToPort: 80
+      CidrIp: 0.0.0.0/0
+  EcsSecurityGroupSshInbound:
+    Type: "AWS::EC2::SecurityGroupIngress"
+    Properties:
+      GroupId: !Ref EcsSecurityGroup
+      IpProtocol: tcp
+      FromPort: 22
+      ToPort: 22
+      CidrIp: 0.0.0.0/0
+  EcsSecurityGroupAlbPorts:
+    Type: "AWS::EC2::SecurityGroupIngress"
+    Properties:
+      GroupId: !Ref EcsSecurityGroup
+      IpProtocol: tcp
+      FromPort: 31000
+      ToPort: 61000
+      SourceSecurityGroupId: !Ref EcsSecurityGroup
+
+  CloudwatchLogGroup:
+    Type: "AWS::Logs::LogGroup"
+    Properties:
+      LogGroupName: !Join
+        - "-"
+        - - ECSLogGroup
+          - !Ref "AWS::StackName"
+      RetentionInDays: 1
+    UpdateReplacePolicy: "Delete"
+    DeletionPolicy: "Delete"
+
+  Tasks:
+    Type: "AWS::ECS::TaskDefinition"
+    Properties:
+      Family: !Join
+        - ""
+        - - !Ref "AWS::StackName"
+          - "ecs-node"
