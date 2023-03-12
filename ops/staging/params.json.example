@@ -1,30 +1,38 @@
 [
     {
-        "ParameterName": "KeyName",
-        "ParameterValue": "MyKeyPairName"
+        "ParameterKey": "KeyName",
+        "ParameterValue": "YourKeyPair"
     },
     {
-        "ParameterName": "VpcId",
-        "ParameterValue": "vpc-1234abcde12345abc"
+        "ParameterKey": "VpcId",
+        "ParameterValue": "vpc-1234abcde1234abcd"
     },
     {
-        "ParameterName": "SubnetId",
-        "ParameterValue": ["subnet-1234abcde12345abc", "subnet-1234abcde12345abc"]
+        "ParameterKey": "SubnetId",
+        "ParameterValue": ["subnet-1234abcde1234abcd", "subnet-1234abcde1234abcd"]
     },
     {
-        "ParameterName": "DesiredCapacity",
+        "ParameterKey": "DesiredCapacity",
         "ParameterValue": "1"
     },
     {
-        "ParameterName": "MaxSize",
+        "ParameterKey": "MaxSize",
         "ParameterValue": "2"
     },
     {
-        "ParameterName": "InstanceType",
+        "ParameterKey": "InstanceType",
         "ParameterValue": "t2.micro"
     },
     {
-        "ParameterName": "InstanceAmi",
-        "ParameterValue": "ami-0cdf84c392db3c246"
+        "ParameterKey": "InstanceAmi",
+        "ParameterValue": "ami-1234abcde1234abcd"
+    },
+    {
+        "ParameterKey": "EcrNginxImage",
+        "ParameterValue": "123456789012.dkr.ecr.ap-southeast-2.amazonaws.com/nginx-build"
+    },
+    {
+        "ParameterKey": "EcrAppImage",
+        "ParameterValue": "123456789012.dkr.ecr.ap-southeast-2.amazonaws.com/node-build"
     }
 ]

@@ -56,6 +56,12 @@ Parameters:
       - i2.4xlarge
       - i2.8xlarge
     ConstraintDescription: Choose a valid instance type.
+  EcrNginxImage:
+    Description: "Nginx Image URI on ECR"
+    Type: String
+  EcrAppImage:
+    Description: "Node Image URI on ECR"
+    Type: String
 
 Resources:
   EcsCluster:
@@ -109,3 +115,36 @@ Resources:
         - ""
         - - !Ref "AWS::StackName"
           - "ecs-node"
+      ContainerDefinitions:
+        - Image: !Ref EcrNginxImage
+          Name: nginx
+          Memory: 256
+          Cpu: 256
+          Essential: true
+          PortMappings:
+            - ContainerPort: 80
+              Protocol: tcp
+          Links:
+            - "app"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref CloudwatchLogGroup
+              awslogs-region: "ap-southeast-2"
+              awslogs-stream-prefix: ecs-node
+        - Image: !Ref EcrAppImage
+          Name: app
+          Memory: 256
+          Cpu: 256
+          Essential: true
+          PortMappings:
+            - ContainerPort: 80
+              Protocol: tcp
+          Links:
+            - "app"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref CloudwatchLogGroup
+              awslogs-region: "ap-southeast-2"
+              awslogs-stream-prefix: ecs-node
