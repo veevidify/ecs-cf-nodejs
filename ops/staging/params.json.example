@@ -8,7 +8,7 @@
         "ParameterValue": "vpc-1234abcde1234abcd"
     },
     {
-        "ParameterKey": "SubnetId",
+        "ParameterKey": "SubnetIds",
         "ParameterValue": ["subnet-1234abcde1234abcd", "subnet-1234abcde1234abcd"]
     },
     {
