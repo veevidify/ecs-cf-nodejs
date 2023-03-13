@@ -258,7 +258,9 @@ Resources:
 
   Service:
     Type: "AWS::ECS::Service"
-    DependsOn: AlbListener
+    DependsOn:
+      - AlbListener
+      - EcsAutoScalingGroup
     Properties:
       Cluster: !Ref EcsCluster
       DesiredCount: 1
@@ -294,6 +296,10 @@ Resources:
                   - "elasticloadbalancing:RegisterTargets"
                   - "ec2:Describe*"
                   - "ec2:AuthorizeSecurityGroupIngress"
+                  - "ecr:BatchGetImage"
+                  - "ecr:GetDownloadUrlForLayer"
+                  - "ecr:GetAuthorizationToken"
+                  - "ecr:DescribeRepositories"
   ServiceScalingTarget:
     Type: "AWS::ApplicationAutoScaling::ScalableTarget"
     Properties:
@@ -395,6 +401,8 @@ Resources:
                   - "ecs:RegisterContainerInstance"
                   - "ecs:StartTelemetrySession"
                   - "ecs:Submit*"
+                  - "ecr:BatchGetImage"
+                  - "ecr:GetDownloadUrlForLayer"
                   - "ecr:GetAuthorizationToken"
                   - "ecr:DescribeRepositories"
                   - "ecr:DescribeImages"
