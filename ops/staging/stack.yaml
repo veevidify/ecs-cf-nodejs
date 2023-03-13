@@ -27,6 +27,10 @@ Parameters:
       - t2.small
       - t2.medium
       - t2.large
+      - t3.micro
+      - t3.small
+      - t3.medium
+      - t3.large
       - m3.medium
       - m3.large
       - m3.xlarge
@@ -133,7 +137,7 @@ Resources:
             LogDriver: awslogs
             Options:
               awslogs-group: !Ref CloudwatchLogGroup
-              awslogs-region: ap-southeast-2
+              awslogs-region: !Ref "AWS::Region"
               awslogs-stream-prefix: ecs-node
         - Image: !Ref EcrAppImage
           Name: app
@@ -147,7 +151,7 @@ Resources:
             LogDriver: awslogs
             Options:
               awslogs-group: !Ref CloudwatchLogGroup
-              awslogs-region: ap-southeast-2
+              awslogs-region: !Ref "AWS::Region"
               awslogs-stream-prefix: ecs-node
 
   EcsAlb:
@@ -170,7 +174,7 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref EcsTargetGroup
       Port: 80
-      Protocol: tcp
+      Protocol: HTTP
   AlbListenerRule:
     Type: "AWS::ElasticLoadBalancingV2::ListenerRule"
     Properties:
@@ -226,17 +230,36 @@ Resources:
           - ""
           - - |
               #!/bin/bash -xe
+            - set -e
+            - "\n"
+            - set -u
+            - "\n"
+            - set -x
+            - "\n"
+            - set -o pipefail
+            - "\n"
+            - |
+              mkdir -p /etc/ecs
             - echo ECS_CLUSTER=
             - !Ref EcsCluster
             - |2
                >> /etc/ecs/ecs.config
             - |
-              yum install -y aws-cfn-bootstrap
-            - "/opt/aws/bin/cfn-signal -e $? "
+              yum update -y
+            - yum -y install python3-pip
+            - "\n"
+            - pip3 install awscli
+            - "\n"
+            - pip3 install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-py3-latest.tar.gz
+            - "\n"
+            - |
+              echo "cfn signal"
+            - /usr/local/bin/cfn-signal -e $?
             - "         --stack "
-            - !Ref "AWS::StackName"
+            - !Ref AWS::StackName
             - "         --resource EcsAutoScalingGroup "
-            - "         --region ap-southeast-2"
+            - "         --region "
+            - !Ref AWS::Region
             - |+
 
   Service:
@@ -260,8 +283,8 @@ Resources:
             Principal:
               Service:
                 - ecs.amazonaws.com
-              Action:
-                - "sts:AssumeRole"
+            Action:
+              - "sts:AssumeRole"
       Path: "/"
       Policies:
         - PolicyName: ecs-service
@@ -336,8 +359,8 @@ Resources:
             Principal:
               Service:
                 - application-autoscaling.amazonaws.com
-              Action:
-                - "sts:AssumeRole"
+            Action:
+              - "sts:AssumeRole"
       Path: "/"
       Policies:
         - PolicyName: service-autoscaling
@@ -360,8 +383,8 @@ Resources:
             Principal:
               Service:
                 - ec2.amazonaws.com
-              Action:
-                - "sts:AssumeRole"
+            Action:
+              - "sts:AssumeRole"
       Path: "/"
       Policies:
         - PolicyName: ecs-service
@@ -371,6 +394,7 @@ Resources:
                 Resource: "*"
                 Action:
                   - "ecs:CreateCluster"
+                  - "ecs:UpdateContainerInstancesState"
                   - "ecs:DeregisterContainerInstance"
                   - "ecs:DiscoverPollEndpoint"
                   - "ecs:Poll"
