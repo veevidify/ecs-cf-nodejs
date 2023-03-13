@@ -192,7 +192,7 @@ Resources:
     DependsOn: EcsAlb
     Properties:
       HealthCheckIntervalSeconds: 20
-      HealthCheckPath: "/ping"
+      HealthCheckPath: "/health"
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
@@ -296,10 +296,12 @@ Resources:
                   - "elasticloadbalancing:RegisterTargets"
                   - "ec2:Describe*"
                   - "ec2:AuthorizeSecurityGroupIngress"
-                  - "ecr:BatchGetImage"
-                  - "ecr:GetDownloadUrlForLayer"
                   - "ecr:GetAuthorizationToken"
                   - "ecr:DescribeRepositories"
+                  - "ecr:DescribeImages"
+                  - "ecr:BatchGetImage"
+                  - "ecr:GetDownloadUrlForLayer"
+                  - "ecr:BatchCheckLayerAvailability"
   ServiceScalingTarget:
     Type: "AWS::ApplicationAutoScaling::ScalableTarget"
     Properties:
@@ -307,7 +309,7 @@ Resources:
       MinCapacity: 1
       ResourceId: !Join
         - ""
-        - - Service/
+        - - service/
           - !Ref EcsCluster
           - /
           - !GetAtt
@@ -316,7 +318,7 @@ Resources:
       RoleARN: !GetAtt
         - AutoScalingRole
         - Arn
-      ScalableDimension: "ecs::service::DesiredCount"
+      ScalableDimension: "ecs:service:DesiredCount"
       ServiceNamespace: ecs
   ServiceScalingPolicy:
     Type: "AWS::ApplicationAutoScaling::ScalingPolicy"
@@ -401,11 +403,12 @@ Resources:
                   - "ecs:RegisterContainerInstance"
                   - "ecs:StartTelemetrySession"
                   - "ecs:Submit*"
-                  - "ecr:BatchGetImage"
-                  - "ecr:GetDownloadUrlForLayer"
                   - "ecr:GetAuthorizationToken"
                   - "ecr:DescribeRepositories"
                   - "ecr:DescribeImages"
+                  - "ecr:BatchGetImage"
+                  - "ecr:GetDownloadUrlForLayer"
+                  - "ecr:BatchCheckLayerAvailability"
                   - "logs:CreateLogStream"
                   - "logs:PutLogEvents"
   Ec2InstanceProfile:

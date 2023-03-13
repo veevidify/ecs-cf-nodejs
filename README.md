@@ -16,3 +16,7 @@ aws cloudformation delete-stack --stack-name EcsHttpNginxNode
 EcsAlb-1968953453.ap-southeast-2.elb.amazonaws.com
 (A Record)
 ```
+
+```
+aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 774540149197.dkr.ecr.ap-southeast-2.amazonaws.com
+```
