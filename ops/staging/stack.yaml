@@ -230,36 +230,30 @@ Resources:
           - ""
           - - |
               #!/bin/bash -xe
-            - set -e
+            - mkdir -p /etc/ecs
             - "\n"
-            - set -u
-            - "\n"
-            - set -x
-            - "\n"
-            - set -o pipefail
-            - "\n"
-            - |
-              mkdir -p /etc/ecs
             - echo ECS_CLUSTER=
             - !Ref EcsCluster
             - |2
                >> /etc/ecs/ecs.config
             - |
-              yum update -y
-            - yum -y install python3-pip
+              yum install -y aws-cfn-bootstrap ecs-init
+            - amazon-linux-extras install -y ecs
             - "\n"
-            - pip3 install awscli
+            - systemctl enable --now --no-block docker
             - "\n"
-            - pip3 install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-py3-latest.tar.gz
+            - systemctl enable --now --no-block ecs
             - "\n"
-            - |
-              echo "cfn signal"
-            - /usr/local/bin/cfn-signal -e $?
+            - systemctl start --no-block docker
+            - "\n"
+            - systemctl start --no-block ecs
+            - "\n"
+            - "/opt/aws/bin/cfn-signal -e $? "
             - "         --stack "
-            - !Ref AWS::StackName
+            - !Ref "AWS::StackName"
             - "         --resource EcsAutoScalingGroup "
             - "         --region "
-            - !Ref AWS::Region
+            - !Ref "AWS::Region"
             - |+
 
   Service:
@@ -401,6 +395,9 @@ Resources:
                   - "ecs:RegisterContainerInstance"
                   - "ecs:StartTelemetrySession"
                   - "ecs:Submit*"
+                  - "ecr:GetAuthorizationToken"
+                  - "ecr:DescribeRepositories"
+                  - "ecr:DescribeImages"
                   - "logs:CreateLogStream"
                   - "logs:PutLogEvents"
   Ec2InstanceProfile:
