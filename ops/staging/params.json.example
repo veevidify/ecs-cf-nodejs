@@ -9,7 +9,7 @@
     },
     {
         "ParameterKey": "SubnetIds",
-        "ParameterValue": ["subnet-1234abcde1234abcd", "subnet-1234abcde1234abcd"]
+        "ParameterValue": ["subnet-1234abcde1234abcd", "subnet-abcd12345abcd1234"]
     },
     {
         "ParameterKey": "DesiredCapacity",
@@ -25,7 +25,7 @@
     },
     {
         "ParameterKey": "InstanceAmi",
-        "ParameterValue": "ami-1234abcde1234abcd"
+        "ParameterValue": "ami-someamaznlinuxami"
     },
     {
         "ParameterKey": "EcrNginxImage",

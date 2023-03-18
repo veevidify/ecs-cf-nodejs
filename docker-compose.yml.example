@@ -1,7 +1,15 @@
 version: '3'
 
 services:
-  node:
+  revproxy:
+    build:
+      context: ops/resources/nginx
+    ports:
+      - "80:80"
+    networks:
+      - node-bridge
+
+  app:
     build:
       context: .
       dockerfile: dev.Dockerfile
