@@ -1,0 +1,38 @@
+[
+    {
+        "ParameterKey": "KeyName",
+        "ParameterValue": "YourKeyPair"
+    },
+    {
+        "ParameterKey": "VpcId",
+        "ParameterValue": "vpc-1234abcde1234abcd"
+    },
+    {
+        "ParameterKey": "SubnetIds",
+        "ParameterValue": ["subnet-1234abcde1234abcd", "subnet-abcd12345abcd1234"]
+    },
+    {
+        "ParameterKey": "DesiredCapacity",
+        "ParameterValue": "1"
+    },
+    {
+        "ParameterKey": "MaxSize",
+        "ParameterValue": "2"
+    },
+    {
+        "ParameterKey": "InstanceType",
+        "ParameterValue": "t3.micro"
+    },
+    {
+        "ParameterKey": "InstanceAmi",
+        "ParameterValue": "ami-someamaznlinuxami"
+    },
+    {
+        "ParameterKey": "EcrNginxImage",
+        "ParameterValue": "123456789012.dkr.ecr.ap-southeast-2.amazonaws.com/nginx-build"
+    },
+    {
+        "ParameterKey": "EcrAppImage",
+        "ParameterValue": "123456789012.dkr.ecr.ap-southeast-2.amazonaws.com/node-build"
+    }
+]
