@@ -20,3 +20,15 @@ EcsAlb-1968953453.ap-southeast-2.elb.amazonaws.com
 ```
 aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 774540149197.dkr.ecr.ap-southeast-2.amazonaws.com
 ```
+
+```
+docker build -t node-docker -f ops/resources/node/Dockerfile .
+docker tag node-docker:latest 774540149197.dkr.ecr.ap-southeast-2.amazonaws.com/node-build
+docker push 774540149197.dkr.ecr.ap-southeast-2.amazonaws.com/node-build
+```
+
+```
+docker build -t nginx-docker -f ops/resources/nginx/Dockerfile ./ops/resources/nginx
+docker tag nginx-docker:latest 774540149197.dkr.ecr.ap-southeast-2.amazonaws.com/nginx-build
+docker push 774540149197.dkr.ecr.ap-southeast-2.amazonaws.com/nginx-build
+```

@@ -122,6 +122,7 @@ Resources:
         - ""
         - - !Ref "AWS::StackName"
           - "ecs-node"
+      NetworkMode: bridge
       ContainerDefinitions:
         - Image: !Ref EcrNginxImage
           Name: nginx
@@ -138,15 +139,12 @@ Resources:
             Options:
               awslogs-group: !Ref CloudwatchLogGroup
               awslogs-region: !Ref "AWS::Region"
-              awslogs-stream-prefix: ecs-node
+              awslogs-stream-prefix: ecs-nginx
         - Image: !Ref EcrAppImage
           Name: app
           Memory: 256
           Cpu: 256
           Essential: true
-          PortMappings:
-            - ContainerPort: 80
-              Protocol: tcp
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -265,7 +263,7 @@ Resources:
       Cluster: !Ref EcsCluster
       DesiredCount: 1
       LoadBalancers:
-        - ContainerName: app
+        - ContainerName: nginx
           ContainerPort: 80
           TargetGroupArn: !Ref EcsTargetGroup
       Role: !Ref EcsServiceRole
