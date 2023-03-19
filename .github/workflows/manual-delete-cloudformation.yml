@@ -1,0 +1,37 @@
+# This workflow is manually triggered
+# Use to tear down cloudformation stack
+
+name: "(Manual) Delete cloudformation stack via AWS Cloudformation"
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+    # Configurable manual dispatch
+    inputs:
+      appenv:
+        type: choice
+        description: "Staging or production"
+        default: "staging"
+        required: true
+        options:
+          - staging
+
+jobs:
+  destroy:
+    # runner environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Delete Cloudformation stack
+        run: |
+          aws cloudformation delete-stack --stack-name ${{ vars.CLOUD_STACK_NAME }}
