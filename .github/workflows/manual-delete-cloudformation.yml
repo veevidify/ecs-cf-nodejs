@@ -33,5 +33,4 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Delete Cloudformation stack
-        run: |
-          aws cloudformation delete-stack --stack-name ${{ vars.CLOUD_STACK_NAME }}
+        run: aws cloudformation delete-stack --stack-name ${{ vars.CLOUD_STACK_NAME }}
