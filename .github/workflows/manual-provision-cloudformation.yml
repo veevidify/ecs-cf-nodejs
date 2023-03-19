@@ -41,7 +41,7 @@ jobs:
           parameter-overrides: >-
             KeyName=${{ vars.EC2_KEYPAIR }},
             VpcId=${{ vars.SERVICE_VPC }},
-            SubnetIds=${{ vars.SERVICE_SUBNETS }},
+            SubnetIds="${{ vars.SERVICE_SUBNETS }}",
             DesiredCapacity=1,
             MaxSize=2,
             InstanceType=t3.micro,
