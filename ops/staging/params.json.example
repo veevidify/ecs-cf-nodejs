@@ -34,5 +34,13 @@
     {
         "ParameterKey": "EcrAppImage",
         "ParameterValue": "123456789012.dkr.ecr.ap-southeast-2.amazonaws.com/node-build"
+    },
+    {
+        "ParameterKey": "ClusterName",
+        "ParameterValue": "ApiCluster"
+    },
+    {
+        "ParameterKey": "ServiceName",
+        "ParameterValue": "EcsNginxNodeApi"
     }
 ]

@@ -67,12 +67,20 @@ Parameters:
     Description: "Node Image URI on ECR"
     Type: String
   InstanceAmi:
-    Description: "Ami for EC2 Instance for ECS cluster"
+    Description: "Amz Linux Ami for EC2 Instance for ECS cluster"
     Type: "AWS::EC2::Image::Id"
+  ClusterName:
+    Description: Name for the ECS Cluster
+    Type: String
+  ServiceName:
+    Description: Name for the ECS Service
+    Type: String
 
 Resources:
   EcsCluster:
     Type: "AWS::ECS::Cluster"
+    Properties:
+      ClusterName: !!Ref ClusterName
 
   EcsSecurityGroup:
     Type: "AWS::EC2::SecurityGroup"
@@ -261,6 +269,7 @@ Resources:
       - EcsAutoScalingGroup
     Properties:
       Cluster: !Ref EcsCluster
+      ServiceName: !Ref ServiceName
       DesiredCount: 1
       LoadBalancers:
         - ContainerName: nginx
