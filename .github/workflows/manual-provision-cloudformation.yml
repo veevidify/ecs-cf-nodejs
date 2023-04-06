@@ -48,3 +48,5 @@ jobs:
             InstanceAmi=${{ vars.AMZ_LINUX_AMI }},
             EcrNginxImage=${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.ap-southeast-2.amazonaws.com/${{ vars.IMAGE_NGINX }}:latest,
             EcrAppImage=${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.ap-southeast-2.amazonaws.com/${{ vars.IMAGE_NODE }}:latest
+            ClusterName=${{ vars.CLUSTER_NAME }}
+            ServiceName=${{ vars.SERVICE_NAME }}
