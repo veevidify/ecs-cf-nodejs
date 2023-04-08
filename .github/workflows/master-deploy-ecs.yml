@@ -11,8 +11,6 @@ on:
 env:
   AWS_REGION: ${{ vars.AWS_REGION }}
   ECR_REPOSITORY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.ap-southeast-2.amazonaws.com
-  ECS_SERVICE: ${{ vars.SERVICE_NAME }}
-  ECS_CLUSTER: ${{ vars.CLUSTER_NAME }}
 
 permissions:
   contents: read
@@ -90,6 +88,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.render-app-container.outputs.task-definition }}
-          service: $ECS_SERVICE
-          cluster: $ECS_CLUSTER
+          service: ${{ vars.SERVICE_NAME }}
+          cluster: ${{ vars.CLUSTER_NAME }}
           wait-for-service-stability: true
