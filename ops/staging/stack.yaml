@@ -134,8 +134,8 @@ Resources:
       ContainerDefinitions:
         - Image: !Ref EcrNginxImage
           Name: nginx
-          Memory: 256
-          Cpu: 256
+          Memory: 128
+          Cpu: 128
           Essential: true
           PortMappings:
             - ContainerPort: 80
