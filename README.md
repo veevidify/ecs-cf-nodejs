@@ -5,6 +5,9 @@
   - [b. Testing node app](#b-testing-node-app)
   - [c. Running local docker compose stack](#c-running-local-docker-compose-stack)
 - [2. CI/CD (WIP)](#2-cicd-wip)
+  - [a. Infra](#a-infra)
+  - [b. Nginx config or App code changes](#b-nginx-config-or-app-code-changes)
+  - [c. Destroy](#c-destroy)
 - [3. Manually testing cloud stack](#3-manually-testing-cloud-stack)
   - [a. Prerequisites](#a-prerequisites)
   - [b. Build, tag \& push to ECR](#b-build-tag--push-to-ecr)
@@ -163,7 +166,11 @@ output:
 ---
 
 ## 2. CI/CD (WIP)
-- Github actions setup (WIP)
+### a. Infra
+
+### b. Nginx config or App code changes
+
+### c. Destroy
 
 ---
 
