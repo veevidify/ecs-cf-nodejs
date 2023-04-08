@@ -80,7 +80,7 @@ Resources:
   EcsCluster:
     Type: "AWS::ECS::Cluster"
     Properties:
-      ClusterName: !!Ref ClusterName
+      ClusterName: !Ref ClusterName
 
   EcsSecurityGroup:
     Type: "AWS::EC2::SecurityGroup"
