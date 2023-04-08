@@ -11,9 +11,11 @@ on:
 env:
   AWS_REGION: ${{ vars.AWS_REGION }}
   ECR_REPOSITORY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.ap-southeast-2.amazonaws.com
+  ECR_NGINX: $ECR_REPOSITORY/${{ vars.IMAGE_NGINX }}
+  ECR_NODE: $ECR_REPOSITORY/${{ vars.IMAGE_NODE }}
   ECS_SERVICE: ${{ vars.SERVICE_NAME }}
   ECS_CLUSTER: ${{ vars.CLUSTER_NAME }}
-  ECS_TASK_DEFINITION: ./element-task-def-yaml
+  ECS_TASK_DEFINITION: ./element-task-def.json
   CONTAINER_NAME: node-api
 
 permissions:
@@ -46,25 +48,43 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          # Build new nginx image for deployment
+          docker build -t $ECR_NGINX:$IMAGE_TAG -f ops/resources/nginx/Dockerfile ./ops/resources/nginx
+          docker push $ECR_NGINX:$IMAGE_TAG
+          echo "nginximage=$ECR_NGINX:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
+          # Build new app image for deployment
+          docker build -t $ECR_NODE:$IMAGE_TAG -f ops/resources/node/Dockerfile .
+          docker push $ECR_NODE:$IMAGE_TAG
+          echo "app=$ECR_NODE:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Download existing task definitions from AWS
+        id: download-task-def
+        run: |
+          aws ecs describe-task-definition --task-definition EcsHttpNginxNodeecs-node --query taskDefinition > ops/staging/task-def.json
+
+      - name: Render Amazon ECS task definition for NGINX container
+        id: render-nginx-container
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
+          task-definition: ops/staging/task-def.json
+          container-name: nginx
+          image: $ECR_NGINX:$IMAGE_TAG
 
-      - name: Deploy Amazon ECS task definition
+      - name: Modify Amazon ECS task definition with APP container
+        id: render-app-container
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-nginx-container.outputs.task-definition }}
+          container-name: app
+          image: amazon/amazon-ecs-sample-2:latest
+          environment-variables: |
+            LOG_LEVEL=info
+            APP_ENV=staging
+
+      - name: Deploy to Amazon ECS service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
+          task-definition: ${{ steps.render-app-container.outputs.task-definition }}
+          service: $ECS_SERVICE
+          cluster: $ECS_CLUSTER
