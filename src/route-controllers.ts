@@ -13,4 +13,9 @@ apis.get("/ping", (req, res) => {
   res.send("pong");
 });
 
+// fallback 404
+apis.get("*", (req, res) => {
+  res.status(404).send("Not Found");
+});
+
 export { apis };

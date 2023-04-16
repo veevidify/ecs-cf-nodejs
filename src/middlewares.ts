@@ -12,8 +12,8 @@ const logReq: Handler = (req, res, next) => {
 };
 
 const logRes: Handler = (req, res, next) => {
-  const { statusCode, statusMessage, headersSent } = res;
   res.on("finish", () => {
+    const { statusCode, statusMessage, headersSent } = res;
     log("info", "Send response", { statusCode });
   });
   next();
